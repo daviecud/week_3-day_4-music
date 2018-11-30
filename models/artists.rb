@@ -1,11 +1,11 @@
 require ('pg')
 require_relative('./albums.rb')
-require_relative('./collector.rb')
 
-class Collector
 
-  attr_reader :id, :name
-  
+class Artists
+
+  attr_reader :id
+  attr_accessor :name
 
 def initialize(options)
   @id = options['id'].to_i if options['id']
@@ -14,7 +14,7 @@ end
 
 def save()
   db = PG.connect({dbname: 'music_colection', host: 'localhost'})
-  sql = "INSERT INTO collector (
+  sql = "INSERT INTO artists (
   name
   ) VALUES ($1)
   RETURNING id"
@@ -27,22 +27,11 @@ end
 
 def self.delete_all()
   db = PG.connect({dbname: 'music_colection', host: 'localhost'})
-  sql = "DELETE FROM collector"
+  sql = "DELETE FROM artists"
   db.prepare("delete_all", sql)
   db.exec_prepared("delete_all")
   db.close
 end
 
-def self.update()
-  db = PG.connect({dbname: 'music_colection', host: 'localhost'})
-  sql = "UPDATE collectors SET (
-    name
-    ) = ($1)
-  WHERE id = $2"
-  values = [@name, @id]
-  db.prepare("update", sql)
-  db.exec_prepared("update", values)
-  db.close()
-end
 
 end
